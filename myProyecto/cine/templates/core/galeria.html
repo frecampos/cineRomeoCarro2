@@ -60,6 +60,14 @@
             <h1>{{l}}</h1><br>
         {% endfor %}
 
+        <br><br>
+
+        <!-- recorrer el arreglo o coleccion -->
+        {% for l in x %}
+            <h1>Nombre:{{l.nombre}}</h1><br>
+            <h1>Precio:{{l.precio}}</h1><br>
+        {% endfor %}
+
 
     {% endblock contenido %}
     

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import home,galeria,formulario,formulario2,quienessomos,eliminar_pelicula,login,carro_compras,cerrar_session
+from .views import home,galeria,formulario,formulario2,quienessomos,eliminar_pelicula,login,carro_compras,cerrar_session,carros
 
 urlpatterns = [
     path('',home,name='HOME'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('agregar_carro/<id>/',carro_compras,name='AGREGAR_CARRO'),
     path('login/',login,name='LOGIN'),
     path('cerrar_session/',cerrar_session,name='LOGOUT'),
+    path('carro/',carros,name='CARRITO'),
 ]

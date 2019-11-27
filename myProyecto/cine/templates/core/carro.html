@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+
+{% block titulo %}
+    Carrito de Compras - Cine Romeo
+{% endblock titulo %}
+
+{% load static %}
+
+{% block contenido %}
+
+<!-- sector del menu -->
+<h2>Carrito de Compras</h2>
+<center>
+<div class="container">
+    <table border="1">
+        <tr>
+            <td>Nombre</td>
+            <td>Precio</td>
+            <td>Cantidad</td>
+            <td>Total</td>
+            <td>Operacion</td>
+        </tr>
+        {% for l in x %}
+        <tr>
+            <td>{{l.nombre}}</td>
+            <td>{{l.precio}}</td>
+            <td>{{l.cantidad}}</td>
+            <td>{{l.total}}</td>
+            <td>
+                <input type="button" value="+">
+                <input type="button" value="-">
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</center>
+{% endblock contenido %}

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cine.apps.CineConfig', # <-- incluir la apliacion en el proyecto
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware', #-- >facebook
 ]
 
 ROOT_URLCONF = 'myProyecto.urls'
@@ -63,6 +65,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',  #-->facebook
+                'social.apps.django_app.context_processors.login_redirect',  # -->facebook
             ],
         },
     },
@@ -122,3 +126,13 @@ STATIC_URL = '/static/'
 #definimos el nombre del recurso y su ubicacion
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+AUTHENTICATION_BACKENDS =(
+ 	'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL='/'
+
+SOCIAL_AUTH_FACEBOOK_KEY='477391829540133'
+SOCIAL_AUTH_FACEBOOK_SECRET='4d0b4ac3d3db6eef2f9ecacf1d3b5034'

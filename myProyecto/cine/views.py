@@ -8,6 +8,8 @@ from  django.contrib.auth import authenticate,logout,login as login_autent
 # agregar un "decorator" para impedir ingresar a las paginas si no esta logeado
 from django.contrib.auth.decorators import login_required
 
+from .clases import elemento,CartItem,carrito
+
 # Create your views here.
 @login_required(login_url='/login/')
 def home(request):
@@ -24,8 +26,11 @@ def login(request):
         password=request.POST.get("txtPass")
         us=authenticate(request,username=usuario,password=password)
         msg=''
+        request.session["carrito"] = []        
+        request.session["carritox"] = []        
+        print('realizado')
         if us is not None and us.is_active:
-            login_autent(request,us)#autentificacion de login
+            login_autent(request,us)#autentificacion de login            
             return render(request,'core/index.html')
         else:
             return render(request,'core/login.html')
@@ -49,14 +54,34 @@ def login_acceso(request):
         else:
             return render(request,'core/login.html')
 
+
+@login_required(login_url='/login/')
+def carros(request):
+    x=request.session["carritox"]    
+    lista=request.session["carritox"]
+    return render(request,'core/carro.html',{'lista':lista,'x':x})
+
 @login_required(login_url='/login/')
 def carro_compras(request,id):
-    lista=request.session.get('carrito','')
-    lista=lista+str(id)+":1 ,"
+    p=Pelicula.objects.get(name=id)
+    x=request.session["carritox"]
+    el=elemento(1,p.name,p.precio,1)
+    sw=0
+    clon=[]
+    for item in x:        
+        cantidad=item["cantidad"]
+        if item["nombre"]==p.name:
+            sw=1
+            cantidad=int(cantidad)+1
+        ne=elemento(1,item["nombre"],item["precio"],cantidad)
+        clon.append(ne.toString())
+    if sw==0:
+        clon.append(el.toString())
+    x=clon    
+    request.session["carritox"]=x
     pelis=Pelicula.objects.all()
-    request.session["carrito"]=lista
-    arr=lista.split(',') 
-    return render(request,'core/galeria.html',{'peliculas':pelis,'lista':arr})
+    lista=request.session["carritox"]
+    return render(request,'core/galeria.html',{'peliculas':pelis,'lista':lista,'x':x})
 
 @login_required(login_url='/login/')
 def eliminar_pelicula(request,id):
@@ -104,3 +129,8 @@ def formulario2(request):
 @login_required(login_url='/login/')
 def quienessomos(request):
     return render(request,'core/quienes_somos.html')
+
+
+######################################################################
+def isset(variable):
+	return variable in locals() or variable in globals()

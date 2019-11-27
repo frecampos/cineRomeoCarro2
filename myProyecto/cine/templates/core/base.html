@@ -33,11 +33,15 @@
                     <a href=""> Quienes Somos</a>
                 </li>
                 <li>
-                    <a href=""> Carrito de Compras</a>
+                    <a href="{% url 'CARRITO' %}"> Carrito de Compras</a>
                 </li>
                 <li>
-                    <a href="{% url 'LOGOUT' %}"> Logout</a>
+                    <a href="{% url 'LOGOUT' %}"> Logout {{user.username }}</a>
                 </li>
+                <li>
+                    <a href="{% url 'social:begin' 'facebook' %}"> Login facebook</a>
+                </li>
+
             </ol>
         </nav>
     </header>

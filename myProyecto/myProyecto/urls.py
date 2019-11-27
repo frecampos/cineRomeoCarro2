@@ -12,6 +12,7 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+    
 """
 #permite incluir ubicacion de archivo
 from django.contrib import admin
@@ -23,6 +24,8 @@ from django.conf.urls.static import static #importar las direcciones estaticas
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('cine.urls')),#redireccionar hacia archivo URLS
+    path('accounts/',include('django.contrib.auth.urls')),    
+    path('oauth/',include('social_django.urls',namespace='social')),
 ]
 #al momento de cargar el archivo de url, se agrega la direccion statica del directorio MEDIA
 if settings.DEBUG:
