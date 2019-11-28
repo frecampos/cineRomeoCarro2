@@ -84,6 +84,39 @@ def carro_compras(request,id):
     return render(request,'core/galeria.html',{'peliculas':pelis,'lista':lista,'x':x})
 
 @login_required(login_url='/login/')
+def carro_compras_mas(request,id):
+    p=Pelicula.objects.get(name=id)
+    x=request.session["carritox"]
+    clon=[]
+    for item in x:        
+        cantidad=item["cantidad"]
+        if item["nombre"]==p.name:
+            cantidad=int(cantidad)+1
+        ne=elemento(1,item["nombre"],item["precio"],cantidad)
+        clon.append(ne.toString())
+    x=clon    
+    request.session["carritox"]=x
+    x=request.session["carritox"]        
+    return render(request,'core/carro.html',{'x':x})
+
+@login_required(login_url='/login/')
+def carro_compras_menos(request,id):
+    p=Pelicula.objects.get(name=id)
+    x=request.session["carritox"]
+    clon=[]
+    for item in x:        
+        cantidad=item["cantidad"]
+        if item["nombre"]==p.name:
+            cantidad=int(cantidad)-1
+        ne=elemento(1,item["nombre"],item["precio"],cantidad)
+        clon.append(ne.toString())
+    x=clon    
+    request.session["carritox"]=x
+    x=request.session["carritox"]    
+    return render(request,'core/carro.html',{'x':x})
+
+
+@login_required(login_url='/login/')
 def eliminar_pelicula(request,id):
     peli=Pelicula.objects.get(name=id)
     mensaje=''

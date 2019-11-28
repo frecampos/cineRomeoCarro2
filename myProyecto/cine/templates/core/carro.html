@@ -27,8 +27,8 @@
             <td>{{l.cantidad}}</td>
             <td>{{l.total}}</td>
             <td>
-                <input type="button" value="+">
-                <input type="button" value="-">
+                <input type="button" value="+" onclick="javascript:location.href='{% url 'CARRO_MAS' l.nombre %}'" >
+                <input type="button" value="-" onclick="javascript:location.href='{% url 'CARRO_MENOS' l.nombre %}'" >
             </td>
         </tr>
         {% endfor %}
