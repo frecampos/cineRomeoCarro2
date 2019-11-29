@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Categoria,Pelicula #importar los modelos de Categoria y Pelicula
+from .models import Categoria,Pelicula,Ticket #importar los modelos de Categoria y Pelicula
 # para trabajar con usuarios debemos importar
 # modelo de tablas de user
 from django.contrib.auth.models import User
@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from  django.contrib.auth import authenticate,logout,login as login_autent
 # agregar un "decorator" para impedir ingresar a las paginas si no esta logeado
 from django.contrib.auth.decorators import login_required
-
-from .clases import elemento,CartItem,carrito
+import datetime;
+from .clases import elemento
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -57,9 +57,39 @@ def login_acceso(request):
 
 @login_required(login_url='/login/')
 def carros(request):
+    x=request.session["carritox"]
+    suma=0
+    for item in x:
+        suma=suma+int(item["total"])           
+    return render(request,'core/carro.html',{'x':x,'total':suma})
+
+@login_required(login_url='/login/')
+def grabar_carro(request):
     x=request.session["carritox"]    
-    lista=request.session["carritox"]
-    return render(request,'core/carro.html',{'lista':lista,'x':x})
+    usuario=request.user.username
+    suma=0
+    try:
+        for item in x:        
+            titulo=item["nombre"]
+            precio=int(item["precio"])
+            cantidad=int(item["cantidad"])
+            total=int(item["total"])        
+            ticket=Ticket(
+                usuario=usuario,
+                titulo=titulo,
+                precio=precio,
+                cantidad=cantidad,
+                total=total,
+                fecha=datetime.date.today()
+            )
+            ticket.save()
+            suma=suma+int(total)  
+            print("reg grabado")                 
+        mensaje="Grabado"
+        request.session["carritox"] = []
+    except:
+        mensaje="error al grabar"            
+    return render(request,'core/carro.html',{'x':x,'total':suma,'mensaje':mensaje})
 
 @login_required(login_url='/login/')
 def carro_compras(request,id):
@@ -67,6 +97,7 @@ def carro_compras(request,id):
     x=request.session["carritox"]
     el=elemento(1,p.name,p.precio,1)
     sw=0
+    suma=0
     clon=[]
     for item in x:        
         cantidad=item["cantidad"]
@@ -74,46 +105,50 @@ def carro_compras(request,id):
             sw=1
             cantidad=int(cantidad)+1
         ne=elemento(1,item["nombre"],item["precio"],cantidad)
+        suma=suma+int(ne.total())
         clon.append(ne.toString())
     if sw==0:
         clon.append(el.toString())
     x=clon    
     request.session["carritox"]=x
-    pelis=Pelicula.objects.all()
-    lista=request.session["carritox"]
-    return render(request,'core/galeria.html',{'peliculas':pelis,'lista':lista,'x':x})
+    pelis=Pelicula.objects.all()    
+    return render(request,'core/galeria.html',{'peliculas':pelis,'total':suma})
 
 @login_required(login_url='/login/')
 def carro_compras_mas(request,id):
     p=Pelicula.objects.get(name=id)
     x=request.session["carritox"]
+    suma=0
     clon=[]
     for item in x:        
         cantidad=item["cantidad"]
         if item["nombre"]==p.name:
             cantidad=int(cantidad)+1
         ne=elemento(1,item["nombre"],item["precio"],cantidad)
+        suma=suma+int(ne.total())
         clon.append(ne.toString())
     x=clon    
     request.session["carritox"]=x
     x=request.session["carritox"]        
-    return render(request,'core/carro.html',{'x':x})
+    return render(request,'core/carro.html',{'x':x,'total':suma})
 
 @login_required(login_url='/login/')
 def carro_compras_menos(request,id):
     p=Pelicula.objects.get(name=id)
     x=request.session["carritox"]
     clon=[]
+    suma=0
     for item in x:        
         cantidad=item["cantidad"]
         if item["nombre"]==p.name:
             cantidad=int(cantidad)-1
         ne=elemento(1,item["nombre"],item["precio"],cantidad)
+        suma=suma+int(ne.total)
         clon.append(ne.toString())
     x=clon    
     request.session["carritox"]=x
     x=request.session["carritox"]    
-    return render(request,'core/carro.html',{'x':x})
+    return render(request,'core/carro.html',{'x':x,'total':total})
 
 
 @login_required(login_url='/login/')

@@ -32,7 +32,15 @@
             </td>
         </tr>
         {% endfor %}
+        <tr>
+            <td colspan="3">Total</td>  
+            <td>{{total}}</td>  
+            <td>
+                <input type="button" value="Grabar Carro" onclick="javascript:location.href='{% url 'GRABAR_CARRO' %}'" >
+            </td>
+        </tr>
     </table>
 </div>
+{{mensaje}}
 </center>
 {% endblock contenido %}
